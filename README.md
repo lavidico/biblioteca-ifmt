@@ -1,11 +1,11 @@
 # Projeto Final - Desenvolvimento de Software Através de Frameworks @ IFMT/2023
 - **Biblioteca/Framework:** 
 	- [Spring Boot Framework / Spring Integration (Cache)](http://google.com)
- <br/>
-- **Tecnologias aplicadas:** 
-  - Java
+
+- __Tecnologias aplicadas:__  <br/>
+  - Java  <br/>
   - Spring Boot Framework
-  <br/>
+
 - **Integrantes:**
   - Jardel Ribeiro
   - Lavídico Alves de Brito Junior
@@ -34,36 +34,38 @@ O cache foi implementado na camada de serviço reduzindo o acesso direto ao banc
 
 Para utilizar a biblioteca de cache disponibilizada pelo Spring, são necessários os seguintes passos:
 
-  1. Adicionar a dependencia ao projeto:
-	  	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'`
+1. Adicionar a dependencia ao projeto: <br/>
+`implementation group: org.springframework.boot', name: 'spring-boot-starter-cache'`
 		
-  2. Habilitar o uso no escopo da aplicação utilizando a seguinte anotação na classe principal: `@EnableCaching`
-`@SpringBootApplication`
-`public class BibliotecaApplication {...`
-
-  3. Na camada de serviço, definir quais funções devem ter seus resultados armazenados em cache:
-  `@Cacheable(value = "livros")`
- `public List<Livro> listarLivros(String filtro) {`
-   ` return livrosRepository.findAllByTituloContainingIgnoreCase(filtro);`
-  `}`
+2. Habilitar o uso no escopo da aplicação utilizando a seguinte anotação na classe principal: <br />
+```
+@EnableCaching
+@SpringBootApplication
+public class BibliotecaApplication {...
+```
+3. Na camada de serviço, definir quais funções devem ter seus resultados armazenados em cache:
+```
+@Cacheable(value = "livros")
+public List<Livro> listarLivros(String filtro) {
+   return livrosRepository.findAllByTituloContainingIgnoreCase(filtro);
+  }
   
-  
-  `@Cacheable(value = "livro", key="#id")`
-  `public Livro buscarLivro(String id) {`
-  ` Livro livro = livrosRepository`
-  `    .findById(id)`
-  `    .orElseThrow(() -> new ` `RegistroNaoEncontradoException("erro.registroNaoEncontradoComId", id));`
-
-`    return livro;`
-`  }`
+@Cacheable(value = "livro", key="#id")
+public Livro buscarLivro(String id) {
+  Livro livro = livrosRepository
+      .findById(id)
+      .orElseThrow(() -> new ` `RegistroNaoEncontradoException("erro.registroNaoEncontradoComId", id));
+    return livro;
+  }
+```
   
   A anotação @Cacheable indica a aplicação que o retorno desta função deve ser armazanada em memória (cache) sendo identificada pelo nome "Livros", definida pelo atributo value. Em uma próxima requisição este método não será executado pois o seu resultado da função será buscado no cache.
   
   
-  4. Nas funções/procedimentos que possam afetar a integridade dos dados em cache , devem ser tratados conforme cada caso:
+4. Nas funções/procedimentos que possam afetar a integridade dos dados em cache , devem ser tratados conforme cada caso:
 
-Para remover o cache obrigando a função a ser executada na próxima requisição, utiliza-se a anotação @CacheEvict:
-
+- Para remover o cache obrigando a função a ser executada na próxima requisição, utiliza-se a anotação @CacheEvict:
+```
   @CacheEvict(value = "livros", allEntries = true)
   public void excluirLivro(String id) {
     Livro livro = livrosRepository
@@ -72,11 +74,11 @@ Para remover o cache obrigando a função a ser executada na próxima requisiç�
 
     livrosRepository.delete(livro);
   }
-
+```
 Onde o cache a ser removido é definido pelo parametro value, o atributo allEntries, indica que todo o conteúdo armazenado é excluido.
 
-Para atualizar os dados em cache após uma modificação sem executar a função, utiliza-se a anotação @CachePut: 
-
+- Para atualizar os dados em cache após executar a função/procedimento, utiliza-se a anotação @CachePut: 
+```
  @CachePut(value = "livro", key="#id") })
   public Livro editarLivro(String id, Livro livroEditado) {
     Livro livroSelecionado = livrosRepository
@@ -90,7 +92,7 @@ Para atualizar os dados em cache após uma modificação sem executar a função
 
     return livroSelecionado;
   }
-  
+```  
   O parametro value indica o cache a ser utilizado e o parametro key indica qual item único será afetado. 
 
   
