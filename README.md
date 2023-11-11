@@ -98,4 +98,5 @@ Para atualizar os dados em cache após uma modificação sem executar a função
 ## 4. Referências
 
 [Documentação Spring Boot Framework (Cache Abstraction)](https://docs.spring.io/spring-framework/reference/integration/cache.html)
+<br/>
 [Apresentação](https://docs.google.com/presentation/d/1Iuq8UrJailj9e3cglvYSz9OFPitgLEQxFa4hv5u_zLc/edit?usp=sharing)
